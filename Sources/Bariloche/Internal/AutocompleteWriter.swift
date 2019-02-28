@@ -79,7 +79,7 @@ extension AutocompleteWriter {
             
             var ret = [String]()
             for flag in command.validFlags() {
-                var help = escape(string: flag.help)
+                var help = escapeInDoubleQuotes(string: flag.help)
                 if !help.isEmpty {
                     help = "[\(help)]"
                 }
@@ -105,19 +105,19 @@ extension AutocompleteWriter {
                 var rawActions = ""
                 switch argument.autocomplete {
                 case .paths(let pattern):
-                    rawActions = "_path_files -g '\(escape(string: pattern ?? "*"))'"
+                    rawActions = "_path_files -g '\(escapeInSingleQuotes(string: pattern ?? "*"))'"
                 case .files(let `extension`):
-                    rawActions = "_path_files -g '*.\(escape(string: `extension` ?? "*"))(-.)'"
+                    rawActions = "_path_files -g '*.\(escapeInSingleQuotes(string: `extension` ?? "*"))(-.)'"
                 case .directories:
                     rawActions = "_path_files -/"
                 case .items(let autocompleteItems):
-                    let raw = autocompleteItems.map { "\($0.value)\\:'\(escape(string: $0.help))'" }.joined(separator: " ")
+                    let raw = autocompleteItems.map { "\($0.value)\\:'\(escapeInSingleQuotes(string: $0.help))'" }.joined(separator: " ")
                     rawActions = "((\(raw)))"
                 case .none:
                     break
                 }
 
-                var help = escape(string: argument.help)
+                var help = escapeInDoubleQuotes(string: argument.help)
                 if !help.isEmpty {
                     help = "[\(help)]"
                 }
@@ -127,7 +127,7 @@ extension AutocompleteWriter {
                     ret.append("\(margin2)\"\(positionalIndex)::\(help):\(rawActions)\" \\")
                     positionalIndex += 1
                 case .variadic where !(rawActions.isEmpty && help.isEmpty):
-                    ret.append("\(margin2)\"*::\(escape(string: argument.help)):\(rawActions)\" \\")
+                    ret.append("\(margin2)\"*::\(escapeInDoubleQuotes(string: argument.help)):\(rawActions)\" \\")
                 case .named(let short, let long):
                     if let short = short {
                         ret.append("\(margin2)\"-\(short)=\(help):::\(rawActions)\" \\")
@@ -153,7 +153,7 @@ extension AutocompleteWriter {
             }
             
             let commandsData: [(name: String, help: String)] = command.subcommands().compactMap {
-                ($0.name!, escape(string: $0.help))
+                ($0.name!, escapeInSingleQuotes(string: $0.help))
             }
             
             let raw = commandsData.map { "\($0.name):'\($0.help)'" }.joined(separator: " ")
@@ -173,7 +173,16 @@ extension AutocompleteWriter {
             return ret.joined(separator: "\n")
         }
         
-        private func escape(string: String?) -> String {
+        private func escapeInSingleQuotes(string: String?) -> String {
+            guard let string = string else { return "" }
+            
+            return string.replacingOccurrences(of: "\\", with: "\\\\\\")
+                .replacingOccurrences(of: "\"", with: "\\\"")
+                .replacingOccurrences(of: "'", with: "'\\''")
+                .replacingOccurrences(of: "`", with: "\\`")
+        }
+        
+        private func escapeInDoubleQuotes(string: String?) -> String {
             guard let string = string else { return "" }
             
             return string.replacingOccurrences(of: "\\", with: "\\\\\\")
