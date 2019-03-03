@@ -126,13 +126,7 @@ struct Parser {
     }
     
     private func parseSubcommand(from argument: String, command: Command) -> Command? {
-        for subcommand in command.subcommands() {
-            if subcommand.name == argument {
-                return subcommand
-            }
-        }
-        
-        return nil
+        return command.subcommands().first { $0.name == argument }
     }
     
     private func prepareArguments(_ arguments: [String]) -> [String] {
