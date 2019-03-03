@@ -8,35 +8,6 @@
 import Foundation
 
 extension Command {
-    func subcommands() -> [Command] {
-        let children = Mirror(reflecting: self).children
-        var ret = children.compactMap { $0.value as? Command }
-        ret += children.compactMap { $0.value as? [Command] }.flatMap { $0 }
-        
-        return ret
-    }
-    
-    func validFlags() -> [Flag] {
-        let children = Mirror(reflecting: self).children
-        var ret = children.compactMap { $0.value as? Flag }
-        ret += children.compactMap { $0.value as? [Flag] }.flatMap { $0 }
-        ret.append(Flag.help)
-        
-        return ret
-    }
-    
-    func validArguments() -> [BaseArgument] {
-        let children = Mirror(reflecting: self).children
-        var ret = children.compactMap { $0.value as? BaseArgument }
-        ret += children.compactMap { $0.value as? [BaseArgument] }.flatMap { $0 }
-        
-        return ret
-    }
-}
-
-// MARK: - Debug
-
-extension Command {
     func integrityCheck() {
         argumentsIntegrityCheck()
         flagsIntegrityCheck()
