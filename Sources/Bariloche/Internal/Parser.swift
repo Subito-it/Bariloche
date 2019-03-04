@@ -64,13 +64,12 @@ struct Parser {
             return .showUsage(parsedCommands, error)
         }
         
-        for (index, parsedCommand) in parsedCommands.enumerated() {
-            let arguments = parsedCommand.validArguments().filter { $0.stringValue != nil }
+        for parsedCommand in parsedCommands {
+            let commandArguments = parsedCommand.validArguments().filter { $0.stringValue != nil }
             let requiredArguments = parsedCommand.validArguments().filter { !$0.optional }
-            let missingArguments = requiredArguments.filter { !arguments.contains($0) }
+            let missingArguments = requiredArguments.filter { !commandArguments.contains($0) }
             
-            let shouldShowUsage = (parsedCommand.shouldShowUsage()) ||
-                                  (!missingArguments.isEmpty)
+            let shouldShowUsage = (parsedCommand.shouldShowUsage() || !missingArguments.isEmpty)
 
             guard !shouldShowUsage else {
                 let error: Parser.Error? = missingArguments.count > 0 ? .missingArgument(missingArguments) : nil
@@ -78,12 +77,11 @@ struct Parser {
             }
             
             guard parsedCommand.run() else {
-                return index > 0 ? .success([]) : .showUsage(parsedCommands, nil)
-            }            
+                break
+            }
         }
         
-        let lastCommandContainsSubcommands = parsedCommands.last?.subcommands().count != 0
-        return lastCommandContainsSubcommands ? .showUsage(parsedCommands, nil) : .success(parsedCommands)
+        return arguments.count == 0 ? .showUsage(parsedCommands, nil) : .success(parsedCommands)
     }
     
     private func parseFlag(from lineArgument: String, command: Command) -> Flag? {
