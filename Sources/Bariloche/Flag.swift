@@ -10,6 +10,7 @@ public class Flag: Equatable, CustomStringConvertible {
     public let long: String?
     public let help: String?
     public var value: Bool = false
+    public var runAction: (() -> Void)?
     
     public var description: String {
         var ret = [String]()
@@ -22,10 +23,11 @@ public class Flag: Equatable, CustomStringConvertible {
         return ret.joined(separator: ", ")
     }
 
-    public init(short: String? = nil, long: String? = nil, help: String?) {
+    public init(short: String? = nil, long: String? = nil, help: String?, runAction: (() -> Void)? = nil) {
         self.short = short
         self.long = long
         self.help = help
+        self.runAction = runAction
     }
     
     public static func == (lhs: Flag, rhs: Flag) -> Bool {
