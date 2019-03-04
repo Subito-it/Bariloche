@@ -138,8 +138,9 @@ class Flag: Equatable, CustomStringConvertible {
     let long: String?
     let help: String?
     var value: Bool = false
+    let runAction: (() -> Void)?
     
-    init(short: String? = nil, long: String? = nil, help: String?)
+    init(short: String? = nil, long: String? = nil, help: String?, runAction: (() -> Void)? = nil)
 }
 ```
 
