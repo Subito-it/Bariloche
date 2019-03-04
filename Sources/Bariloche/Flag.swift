@@ -33,6 +33,15 @@ public class Flag: Equatable, CustomStringConvertible {
                lhs.long == rhs.long &&
                lhs.help == rhs.help
     }
+    
+    public static func == (lhs: Flag, rhs: String) -> Bool {
+        let flags = lhs.description.components(separatedBy: ", ")
+        return flags.contains(rhs)
+    }
+
+    public static func == (lhs: String, rhs: Flag) -> Bool {
+        return rhs == lhs
+    }
 }
 
 extension Flag {
