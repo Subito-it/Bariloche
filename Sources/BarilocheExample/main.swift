@@ -7,3 +7,4 @@ func parseExample(command: Command) -> [Command] {
 
 let result = parseExample(command: CocoaPodsCommand())
 // let result = parseExample(command: CatCommand())
+// let result = parseExample(command: SampleCommand())
