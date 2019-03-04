@@ -10,7 +10,7 @@ public class Flag: Equatable, CustomStringConvertible {
     public let long: String?
     public let help: String?
     public var value: Bool = false
-    public var runAction: (() -> Void)?
+    public let runAction: (() -> Void)?
     
     public var description: String {
         var ret = [String]()
