@@ -114,12 +114,14 @@ struct Parser {
                     argument.stringValue = lineArguments[1]
                     return argument
                 }
-            case .positional:
+            case .positional where !lineArguments[0].hasPrefix("-"):
                 argument.stringValue = lineArguments.first
                 return argument
-            case .variadic:
+            case .variadic where !lineArguments[0].hasPrefix("-"):
                 argument.stringValue = (argument.stringValue ?? "") + Argument.Kind.variadicSeparator + (lineArguments.first ?? "")
                 return argument
+            default:
+                return nil
             }
         }
         
