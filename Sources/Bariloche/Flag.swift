@@ -47,3 +47,9 @@ public class Flag: Equatable, CustomStringConvertible {
 extension Flag {
     static let help = Flag(short: "h", long: "help", help: "Show help banner of specified command")
 }
+
+extension Array where Element == String {
+    func contains(_ element: Flag) -> Bool {
+        return first(where: { element == $0 }) != nil
+    }
+}
