@@ -70,6 +70,10 @@ struct Parser {
             let missingArguments = requiredArguments.filter { !commandArguments.contains($0) }
             let commandFlags = parsedCommand.validFlags()
             
+            if let runActionFlag = commandFlags.first(where: { arguments.contains($0) && $0.runAction != nil }) {
+                runActionFlag.runAction?()
+                return .success(parsedCommands)
+            }
             
             let shouldShowUsage = (parsedCommand.shouldShowUsage() || !missingArguments.isEmpty)
 
