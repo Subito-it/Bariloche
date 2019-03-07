@@ -81,7 +81,9 @@ struct Parser {
             }
         }
         
-        return arguments.count == 0 ? .showUsage(parsedCommands, nil) : .success(parsedCommands)
+        let showUsage = (arguments.count <= parsedCommands.compactMap { $0.name }.count)
+        
+        return showUsage ? .showUsage(parsedCommands, nil) : .success(parsedCommands)
     }
     
     private func parseFlag(from lineArgument: String, command: Command) -> Flag? {
