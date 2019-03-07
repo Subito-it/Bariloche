@@ -10,7 +10,7 @@ import Bariloche
 
 class CocoaPodsCommand: Command {
     let usage: String? = "CocoaPods, the Cocoa library package manager."
-    let subcommands: [Command] = [SearchCommand(), CacheCommand()]
+    let subcommands: [Command] = [SearchCommand(), CacheCommand(), TestCommand()]
     
     func run() -> Bool {
         return true
