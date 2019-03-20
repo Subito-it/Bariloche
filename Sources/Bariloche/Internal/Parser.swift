@@ -120,7 +120,7 @@ struct Parser {
                 argument.stringValue = (argument.stringValue ?? "") + Argument.Kind.variadicSeparator + (lineArguments.first ?? "")
                 return argument
             default:
-                return nil
+                continue
             }
         }
         
