@@ -70,7 +70,7 @@ struct Parser {
             let missingArguments = requiredArguments.filter { !commandArguments.contains($0) }
             
             let shouldShowUsage = (parsedCommand.shouldShowUsage() || !missingArguments.isEmpty)
-
+            
             guard !shouldShowUsage else {
                 let error: Parser.Error? = missingArguments.count > 0 ? .missingArgument(missingArguments) : nil
                 return .showUsage(parsedCommands, error)
@@ -81,7 +81,7 @@ struct Parser {
             }
         }
         
-        let showUsage = (arguments.count <= parsedCommands.compactMap { $0.name }.count)
+        let showUsage = parsedCommands.last?.subcommands().count != 0
         
         return showUsage ? .showUsage(parsedCommands, nil) : .success(parsedCommands)
     }
