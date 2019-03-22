@@ -64,6 +64,7 @@ struct Parser {
             return .showUsage(parsedCommands, error)
         }
         
+        var showUsage = false
         for parsedCommand in parsedCommands {
             let commandArguments = parsedCommand.validArguments().filter { $0.stringValue != nil }
             let requiredArguments = parsedCommand.validArguments().filter { !$0.optional }
@@ -77,13 +78,12 @@ struct Parser {
             }
             
             guard parsedCommand.run() else {
+                showUsage = true
                 break
             }
         }
         
-        let showUsage = parsedCommands.last?.subcommands().count != 0
-        
-        return showUsage ? .showUsage(parsedCommands, nil) : .success(parsedCommands)
+        return showUsage || arguments.count == 0 ? .showUsage(parsedCommands, nil) : .success(parsedCommands)
     }
     
     private func parseFlag(from lineArgument: String, command: Command) -> Flag? {
