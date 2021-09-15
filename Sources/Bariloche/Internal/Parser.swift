@@ -117,7 +117,7 @@ struct Parser {
                 argument.stringValue = lineArguments.first
                 return argument
             case .variadic where !lineArguments[0].hasPrefix("-"):
-                argument.stringValue = (argument.stringValue ?? "") + Argument.Kind.variadicSeparator + (lineArguments.first ?? "")
+                argument.stringValue = (argument.stringValue ?? "") + Argument<Any>.Kind.variadicSeparator + (lineArguments.first ?? "")
                 return argument
             default:
                 continue
