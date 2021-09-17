@@ -63,7 +63,7 @@ extension Command {
             assert((flag.short ?? "").contains(" ") == false, "For flag short should not contain spaces")
             assert((flag.long ?? "").contains(" ") == false, "For flag long should not contain spaces")
             assert((flag.short ?? "").contains("-") == false, "For flag short should not contain dash characters")
-            assert((flag.long ?? "").contains("-") == false, "For flag long should not contain dash characters")
+            assert((flag.long ?? "").starts(with: "-") == false, "For flag long should not contain dash characters")
         }
     }
 }

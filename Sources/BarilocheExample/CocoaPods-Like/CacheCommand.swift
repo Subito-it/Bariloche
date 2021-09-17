@@ -13,6 +13,8 @@ class CacheCommand: Command {
     let usage: String? = "Manipulate the download cache for pods, like printing the cache content or cleaning the pods cache."
     let help: String? = "Manipulate the CocoaPods cache"
     
+    let flag = Flag(short: "s", long: "some-flag", help: "Some flag help")
+    
     let option = Argument<String>(name: "type",
                                   kind: .named(short: "t", long: "type"),
                                   optional: true,
