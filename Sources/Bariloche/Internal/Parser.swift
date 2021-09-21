@@ -65,21 +65,21 @@ struct Parser {
         }
         
         var showUsage = false
-        for parsedCommand in parsedCommands {
-            let commandArguments = parsedCommand.validArguments().filter { $0.stringValue != nil }
-            let requiredArguments = parsedCommand.validArguments().filter { !$0.optional }
-            let missingArguments = requiredArguments.filter { !commandArguments.contains($0) }
-            
-            let shouldShowUsage = (parsedCommand.shouldShowUsage() || !missingArguments.isEmpty)
-            
-            guard !shouldShowUsage else {
-                let error: Parser.Error? = missingArguments.count > 0 ? .missingArgument(missingArguments) : nil
-                return .showUsage(parsedCommands, error)
+        if let activatedCommand = parsedCommands.last {
+            if activatedCommand.shouldShowUsage() {
+                return .showUsage(parsedCommands, nil)
             }
             
-            guard parsedCommand.run() else {
+            let commandArguments = activatedCommand.validArguments().filter { $0.stringValue != nil }
+            let requiredArguments = activatedCommand.validArguments().filter { !$0.optional }
+            let missingArguments = requiredArguments.filter { !commandArguments.contains($0) }
+            
+            guard missingArguments.isEmpty else {
+                return .showUsage(parsedCommands, .missingArgument(missingArguments))
+            }
+            
+            if !activatedCommand.run() {
                 showUsage = true
-                break
             }
         }
         
