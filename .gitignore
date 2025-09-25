@@ -2,3 +2,9 @@
 /.build
 /Packages
 /*.xcodeproj
+/.swiftpm
+DerivedData/
+xcuserdata/
+*.xcworkspace
+.vscode/
+*.sw?

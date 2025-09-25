@@ -99,8 +99,8 @@ struct Parser {
     
     private func parseArgument(from lineArguments: [String], command: Command) -> BaseArgument? {
         outerLoop: for argument in command.validArguments() {
-            guard argument.stringValue == nil || argument.kind == .variadic else { continue }
-            
+            guard argument.stringValue == nil || argument.allowsMultipleValues else { continue }
+
             switch argument.kind {
             case .named(let short, let long):
                 guard lineArguments.count > 1 else {
@@ -110,14 +110,14 @@ struct Parser {
                     continue
                 }
                 if ["-\(short ?? "")", "--\(long ?? "")"].contains(lineArguments[0]) {
-                    argument.stringValue = lineArguments[1]
+                    argument.appendStringValue(lineArguments[1])
                     return argument
                 }
             case .positional where !lineArguments[0].hasPrefix("-"):
-                argument.stringValue = lineArguments.first
+                argument.appendStringValue(lineArguments.first ?? "")
                 return argument
             case .variadic where !lineArguments[0].hasPrefix("-"):
-                argument.stringValue = (argument.stringValue ?? "") + Argument<Any>.Kind.variadicSeparator + (lineArguments.first ?? "")
+                argument.appendStringValue(lineArguments.first ?? "")
                 return argument
             default:
                 continue

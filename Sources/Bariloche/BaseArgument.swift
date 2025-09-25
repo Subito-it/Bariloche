@@ -19,6 +19,15 @@ public class BaseArgument: Equatable, CustomStringConvertible {
     public let autocomplete: Autocomplete
 
     var stringValue: String?
+
+    var allowsMultipleValues: Bool {
+        switch kind {
+        case .variadic:
+            return true
+        default:
+            return false
+        }
+    }
         
     public var description: String {
         switch kind {
@@ -70,6 +79,14 @@ public class BaseArgument: Equatable, CustomStringConvertible {
         self.optional = optional
         self.help = help
         self.autocomplete = autocomplete
+    }
+
+    func appendStringValue(_ newValue: String) {
+        if let existing = stringValue, !existing.isEmpty {
+            stringValue = existing + Kind.variadicSeparator + newValue
+        } else {
+            stringValue = newValue
+        }
     }
 }
 
